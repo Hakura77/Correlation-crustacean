@@ -1,4 +1,4 @@
-describe ('Check to confirm correct initalization of CorrelationCalculator and all methods', function () {
+describe ('Correlation Calculator: ', function () {
   'use strict';
   var theCorrelationCalculator = new CorrelationCalculator([186, 699, 132, 272, 291, 331, 199, 1890, 788, 1601], [15.0, 69.9, 6.5, 22.4, 28.4, 65.9, 19.4, 198.7, 38.8, 138.2
     ])
@@ -40,7 +40,7 @@ describe ('Check to confirm correct initalization of CorrelationCalculator and a
       expect(typeof(theCorrelationCalculator.sum(this.arrayToSum))).toBe('number')
     })
     
-    it(`Should correctly return ${this.expectedResult} from summing ${this.arrayToSum}`, function() {
+    it(`Should correctly return 6389`, function() {
       expect(theCorrelationCalculator.sum(this.arrayToSum)).toBe(this.expectedResult)
     })
   
@@ -81,7 +81,7 @@ describe ('Check to confirm correct initalization of CorrelationCalculator and a
       expect(Array.isArray(theCorrelationCalculator.multiplyTogether(this.array1, this.array2))).toBeTruthy()
     })
     
-    it(`Should correctly return ${this.expectedResults} from multipling together ${this.array1} and ${this.array2} `, function() {
+    it(`Should correctly calculate it's result `, function() {
       let returnArray = theCorrelationCalculator.multiplyTogether(this.array1,this.array2)
       for (let item in returnArray) {
         expect(returnArray[item]).toBe(this.expectedResults[item])
@@ -96,14 +96,14 @@ describe ('Check to confirm correct initalization of CorrelationCalculator and a
       this.expectedResults = [34596, 488601, 17424, 73984, 84681, 109561, 39601, 3572100, 620944, 2563201]
     })
     it ('Should exist as a method', function () {
-      expect(typeof(theCorrelationCalculator.multiplyTogether)).toBe('function')
+      expect(typeof(theCorrelationCalculator.squareArray)).toBe('function')
     })
     
     it ('Should return an array of values', function () {
-      expect(Array.isArray(theCorrelationCalculator.multiplyTogether(this.array1, this.array2))).toBeTruthy()
+      expect(Array.isArray(theCorrelationCalculator.squareArray(this.arrayToSquare))).toBeTruthy()
     })
     
-    it(`Should correctly return ${this.expectedResults} from squaring ${this.arrayToSquare} `, function() {
+    it(`Should correctly return squared values from the provided array `, function() {
       let returnArray = theCorrelationCalculator.squareArray(this.arrayToSquare)
       for (let item in returnArray) {
         expect(returnArray[item]).toBe(this.expectedResults[item])
@@ -112,90 +112,70 @@ describe ('Check to confirm correct initalization of CorrelationCalculator and a
   
   })
   
-  describe( 'the xSum method', function() {
+  describe( 'the xSum  getter method', function() {
     beforeEach( function() {
-      this.xSumSpy = spyOn(theCorrelationCalculator, 'xSum').and.callThrough()
       this.expectedResult = 6389
     })
     
     it (`Should return 6389`, function() {
       expect(theCorrelationCalculator.xSum).toBe(this.expectedResult)
     })
-    
-    it ('Should have been called by the previous it', function() {
-      expect(this.xSumSpy).toHaveBeenCalled()
-    })
   })
   
-  describe( 'the sumXSquared method', function() {
+  describe( 'the sumXSquared getter method', function() {
     beforeEach( function() {
-      this.xSumSquaredSpy = spyOn(theCorrelationCalculator, 'sumXSquared').and.callThrough()
       this.expectedResult = 7604693
     })
     
     it (`Should return 7604963`, function() {
       expect(theCorrelationCalculator.sumXSquared).toBe(this.expectedResult)
     })
-    
-    it ('Should have been called by the previous it', function() {
-      expect(this.xSumSquaredSpy).toHaveBeenCalled()
-    })
   })
   
-  describe( 'the ySum method', function() {
+  describe( 'the ySum getter method', function() {
     beforeEach( function() {
-      this.ySumSpy = spyOn(theCorrelationCalculator, 'ySum').and.callThrough()
       this.expectedResult = 603.2
     })
     
     it (`Should return 603.2`, function() {
       expect(theCorrelationCalculator.ySum).toBe(this.expectedResult)
     })
-    
-    it ('Should have been called by the previous it', function() {
-      expect(this.ySumSpy).toHaveBeenCalled()
-    })
   })
   
-  describe( 'the sumYSquared method', function() {
+  describe( 'the sumYSquared getter method', function() {
     beforeEach( function() {
-      this.ySquaredSpy = spyOn(theCorrelationCalculator, 'sumYSquared').and.callThrough()
       this.expectedResult = 71267.12
     })
-    it (`Should return ${this.expectedResult}`, function() {
+    it (`Should return 71267.12`, function() {
       expect(theCorrelationCalculator.sumYSquared).toBe(this.expectedResult)
     })
-    
-    it ('Should have been called by the previous it', function() {
-      expect(this.ySquaredSpy).toHaveBeenCalled()
-    })
+
   })
   
-  describe( 'the xySum method', function() {
+  describe( 'the xySum getter method', function() {
     beforeEach( function() {
-      this.xySquaredSpy = spyOn(theCorrelationCalculator, 'xySum').and.callThrough()
       this.expectedResult = 719914.4
     })
     
-    it (`Should return ${this.expectedResult}`, function() {
+    it (`Should return 719914.4`, function() {
       expect(theCorrelationCalculator.xySum).toBe(this.expectedResult)
     })
-    
-    it ('Should have been called by the previous it', function() {
-      expect(this.xySquaredSpy).toHaveBeenCalled()
-    })
+
   })
   
   describe('the calculate method', function() {
     beforeEach( function() {
-      this.expectedResults = [0.9107, 0.9107]
+      this.expectedResults = [0.9543, 0.9107]
     })
     it ('Should exist as a method', function () {
       expect(typeof(theCorrelationCalculator.calculate)).toBe('function')
     })
     
-    it (`Should return ${this.expectedResult}`, function() {
-      expect(theCorrelationCalculator.calculate()).toBe(this.expectedResult)
+    it (`Should return [0.9543, 0.9107]`, function() {
+      let theResults = theCorrelationCalculator.calculate()
+      for (let anIndex of this.expectedResults) {
+        expect(theResults[anIndex]).toBe(this.expectedResults[anIndex])
+      }
     })
     
   })

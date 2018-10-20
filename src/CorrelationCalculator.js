@@ -39,7 +39,11 @@ class CorrelationCalculator {
     // returns an array where each value within the array has been squared. 
     // returns a single array
     // assumes the array is one dimensional and contains only numbers
-    return this.multiplyTogether(anArray, anArray)
+    let returnArray = []
+    for (let anIndex of anArray) {
+      returnArray.push(Math.pow(anIndex, 2))
+    }
+    return returnArray
   }
   
   // getter methods - NOTE: Possibly too much abstraction / duplication
@@ -64,18 +68,33 @@ class CorrelationCalculator {
     return this.sum(this.squareArray(this.numberArrayY))
   }
   
+  get n() {
+    // not so descriptive attribute name, but n is used for the number of items in an array in all formulae
+    // let theReturn = (this.numberArrayX.length === this.numberArrayY.length ? this.numberArrayX.length : undefined)
+    if (this.numberArrayX.length === this.numberArrayY.length) {
+      return this.numberArrayX.length
+    } else {
+      throw 'X and Y do not match'
+    }
+  }
+  
   // controller methods
   
   calculate() {
     // method to calculate the correlation coefficent of the two stored arrays
-    // assumes that both arrays contain only numbers, and are the same length
-    let numerator = (this.numberArrayX.length * this.xySum) - (this.xSum * this.ySum)
-    let denominator = Math.sqrt( 
-      (this.numberArrayX.length * this.sumXSquared) - Math.pow(this.xSum, 2) 
-      * (this.numberArrayY.length * this.sumYSquared) - Math.pow(this.ySum, 2) 
-      )
-      let r = numerator / denominator
-      let rSquared = Math.pow(r, 2)
+    // assumes that both arrays contain only numbers, and are the same length 
+    let numerator = (this.n * this.xySum) - (this.xSum * this.ySum)
+    let denominatorLeft = (this.n * this.sumXSquared) - Math.pow(this.xSum, 2)
+    let denominatorRight = (this.n * this.sumYSquared) - Math.pow(this.ySum, 2)
+    let denominator = Math.sqrt(denominatorLeft * denominatorRight)
+    let r = numerator / denominator
+    let rSquared = Math.pow(r, 2)
+    // up to here the logic is as accurate as possible for javascript's math engine to be
+    
+    // trim the results to 4 decimal points for ease of reading by a human (nobody wants too many digits)
+    r = parseFloat(r.toFixed(4))
+    rSquared = parseFloat(rSquared.toFixed(4))
+    
     return [r, rSquared]
   }  
   
