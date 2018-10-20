@@ -2,7 +2,7 @@
 All rights reserved
 Does not conform to standardJS */
 
-class CorrelationCalculator () {
+class CorrelationCalculator {
   // Class to take two arrays of numbers
   // calculates the correlation coefficent of the two arrays
   constructor(newNumberArrayX, newNumberArrayY) {
@@ -42,21 +42,6 @@ class CorrelationCalculator () {
     return this.multiplyTogether(anArray, anArray)
   }
   
-  standardize(anArray) {
-    // calculates and returns the standardized version of all values within the provided array
-    // assumes that it is provided a one dimensional array containing only numbers
-    let returnArray = []
-    let theAverage = this.avg(anArray) // calculate the average of the provided array
-    let theStd = math.std(anArray) // calculate the standard deviation of the provided array
-    let theStandardizedValue // create empty value to insert each recursion into
-    for (let aCoordinate of anArray) {
-      // iterate through the provided array, calculating the standardized version of each value
-      theStandardizedValue = (aCoordinate - theAverage) / theStd
-      returnArray.push(theStandardizedValue)
-    }
-    return returnArray
-  }
-  
   // getter methods - NOTE: Possibly too much abstraction / duplication
   
   get xSum() {
@@ -85,11 +70,13 @@ class CorrelationCalculator () {
     // method to calculate the correlation coefficent of the two stored arrays
     // assumes that both arrays contain only numbers, and are the same length
     let numerator = (this.numberArrayX.length * this.xySum) - (this.xSum * this.ySum)
-    let denominator = math.sqrt( 
-      (this.numberArrayX.length * this.sumXSquared) - math.square(this.xSum) 
-      * (this.numberArrayY.length * this.sumYSquared) - math.square(this.ySum) 
+    let denominator = Math.sqrt( 
+      (this.numberArrayX.length * this.sumXSquared) - Math.pow(this.xSum, 2) 
+      * (this.numberArrayY.length * this.sumYSquared) - Math.pow(this.ySum, 2) 
       )
-    return numerator / denominator // calculate the correlation coefficent and return it 
+      let r = numerator / denominator
+      let rSquared = Math.pow(r, 2)
+    return [r, rSquared]
   }  
   
 }
