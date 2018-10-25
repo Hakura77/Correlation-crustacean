@@ -6,8 +6,12 @@ class CorrelationCalculator {
   // Class to take two arrays of numbers
   // calculates the correlation coefficent of the two arrays
   constructor(newNumberArrayX, newNumberArrayY) {
-    this.numberArrayY = newNumberArrayY
-    this.numberArrayX = newNumberArrayX
+    if (newNumberArrayX.length === newNumberArrayY.length) {
+      this.numberArrayY = newNumberArrayY
+      this.numberArrayX = newNumberArrayX
+    } else {
+      throw 'Arrays are not the same length!'
+    }
   }
   
   // calculator methods
@@ -83,6 +87,7 @@ class CorrelationCalculator {
   calculate() {
     // method to calculate the correlation coefficent of the two stored arrays
     // assumes that both arrays contain only numbers, and are the same length 
+
     let numerator = (this.n * this.xySum) - (this.xSum * this.ySum)
     let denominatorLeft = (this.n * this.sumXSquared) - Math.pow(this.xSum, 2)
     let denominatorRight = (this.n * this.sumYSquared) - Math.pow(this.ySum, 2)
@@ -95,7 +100,11 @@ class CorrelationCalculator {
     r = parseFloat(r.toFixed(4))
     rSquared = parseFloat(rSquared.toFixed(4))
     
-    return [r, rSquared]
+    let returnMap = new Map()
+    returnMap.set('r', r)
+    returnMap.set('rSquared', rSquared)
+    
+    return returnMap
   }  
   
 }

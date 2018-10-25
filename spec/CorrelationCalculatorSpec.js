@@ -1,5 +1,4 @@
 describe ('Correlation Calculator: ', function () {
-  'use strict';
   var theCorrelationCalculator = new CorrelationCalculator([186, 699, 132, 272, 291, 331, 199, 1890, 788, 1601], [15.0, 69.9, 6.5, 22.4, 28.4, 65.9, 19.4, 198.7, 38.8, 138.2
     ])
   
@@ -165,7 +164,7 @@ describe ('Correlation Calculator: ', function () {
   
   describe('the calculate method', function() {
     beforeEach( function() {
-      this.expectedResults = [0.9543, 0.9107]
+      this.expectedResults = new Map([['r', 0.9543], ['rSquared', 0.9107]])
     })
     it ('Should exist as a method', function () {
       expect(typeof(theCorrelationCalculator.calculate)).toBe('function')
@@ -173,8 +172,9 @@ describe ('Correlation Calculator: ', function () {
     
     it (`Should return [0.9543, 0.9107]`, function() {
       let theResults = theCorrelationCalculator.calculate()
-      for (let anIndex of this.expectedResults) {
-        expect(theResults[anIndex]).toBe(this.expectedResults[anIndex])
+      expect(theResults instanceof Map).toBeTruthy()
+      for (let aKey in this.expectedResults.keys()) {
+        expect(theResults.get(aKey)).toBe(this.expectedResults.get(aKey))
       }
     })
     
