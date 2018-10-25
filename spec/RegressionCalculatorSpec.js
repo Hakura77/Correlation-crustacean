@@ -7,7 +7,11 @@ describe('Regression Calculator: ', function() {
   var regressionCalculator2 = new RegressionCalculator(dataset2, dataset3)
   
   var calculator1Expected = new Map ([['beta_0',  -22.55], ['beta_1', 1.7279]])
-  var calculator1Expected = new Map ([['beta_0',  -23.92], ['beta_1', 1.4310]])
+  var calculator2Expected = new Map ([['beta_0',  -23.92], ['beta_1', 1.4310]])
+  
+  function fixToExpected(aValue, expected) {
+    return parseFloat(aValue.toFixed(expected))
+  }
   
   describe('The constructed instances ', function() {
     it('Should extend CorrelationCalculator', function() {
@@ -46,7 +50,71 @@ describe('Regression Calculator: ', function() {
       expect(testLessThanFive.warning).toBeTruthy()
       
     })
+  })
+  
+  describe('The calculateB0 method ', function() {
+    it('Should exist', function() {
+      expect(typeof(regressionCalculator1.calculateB0)).toBe('function')
+      expect(typeof(regressionCalculator2.calculateB0)).toBe('function')
+    })
     
+    it('Should return the correctly calculated value', function() {
+      expect(regressionCalculator1.calculateB0()).toBe(calculator1Expected.get('beta_0'))
+      expect(regressionCalculator2.calculateB0()).toBe(calculator2Expected.get('beta_0'))
+    })
+    
+  })
+  
+  describe('The calculateB1 method ', function() {
+    it('Should exist', function() {
+      expect(typeof(regressionCalculator1.calculateB1)).toBe('function')
+      expect(typeof(regressionCalculator2.calculateB1)).toBe('function')
+    })
+    
+    it('Should return the correctly calculated value', function() {
+      expect(regressionCalculator1.calculateB1()).toBe(calculator1Expected.get('beta_1'))
+      expect(regressionCalculator2.calculateB1()).toBe(calculator2Expected.get('beta_1'))
+    })
+    
+  })
+  
+  describe('The Calculate method ', function() {
+    it('Should exist', function() {
+      expect(typeof(regressionCalculator1.calculate)).toBe('function')
+      expect(typeof(regressionCalculator2.calculate)).toBe('function')
+    })
+    
+    it('Should return two values when not passed a xk value', function() {
+      expect(regressionCalculator1.calculate().size).toBe(2)
+      expect(regressionCalculator2.calculate().size).toBe(2)
+    })
+    
+    it('Should return the expected beta_0 and beta_1 values', function() {
+      let rC1Values = regressionCalculator1.calculate()
+      for (let aKey of rC1Values.keys()){
+        expect(rC1Values.get(aKey)).toBe(calculator1Expected.get(aKey))
+      }
+      
+      let rC2Values = regressionCalculator2.calculate()
+      for (let aKey of rC2Values.keys()){
+        expect(rC2Values.get(aKey)).toBe(calculator2Expected.get(aKey))
+      }
+      
+    })
+    
+    it ('Should return three values when passed an xk value', function() {
+      expect(regressionCalculator1.calculate(2).size).toBe(3)
+      expect(regressionCalculator2.calculate(2).size).toBe(3)
+    })
+    
+    it('Should return the correct yk value when passed an xk value', function() {
+      // do not have clear spec for this test from client - FIX LATER!!!
+      // expect(regressionCalculator1.calculate(2)).toBe(3)
+      // expect(regressionCalculator2.calculate(2)).toBe(3)
+      
+      expect("I don't know what to expect").toBe('A value of some kind')
+      
+    })
     
     
   })

@@ -84,7 +84,7 @@ class CorrelationCalculator {
   
   // controller methods
   
-  calculate() {
+  calculate(raw = false) {
     // method to calculate the correlation coefficent of the two stored arrays
     // assumes that both arrays contain only numbers, and are the same length 
 
@@ -96,10 +96,11 @@ class CorrelationCalculator {
     let rSquared = Math.pow(r, 2)
     // up to here the logic is as accurate as possible for javascript's math engine to be
     
+    if(!raw) {
     // trim the results to 4 decimal points for ease of reading by a human (nobody wants too many digits)
-    r = parseFloat(r.toFixed(4))
-    rSquared = parseFloat(rSquared.toFixed(4))
-    
+      r = parseFloat(r.toFixed(4))
+      rSquared = parseFloat(rSquared.toFixed(4))
+    }
     let returnMap = new Map()
     returnMap.set('r', r)
     returnMap.set('rSquared', rSquared)
