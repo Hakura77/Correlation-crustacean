@@ -19,6 +19,7 @@
 <script> 
 
 document.addEventListener('DOMContentLoaded', function() {
+  var theVue // force theVue to be global
   vueLoad()
 
 })
@@ -64,7 +65,7 @@ document.addEventListener('DOMContentLoaded', function() {
       <p id='vCorrelationR'>{{ correlationValues.get('r') }}</p>
       
       <label for="vCorrelationR2"><i>r<sup>2</sup></i>:</label>
-      <p id='vCorrelationR2'>{{ correlationValues.get('r2') }}</p>
+      <p id='vCorrelationR2'>{{ correlationValues.get('rSquared') }}</p>
       
     </div>
     
@@ -75,8 +76,8 @@ document.addEventListener('DOMContentLoaded', function() {
       <label for="vBeta_1">Beta 1:</label>
       <p id='vBeta_1'>{{ regressionValues.get('beta_1') }}</p>
       
-      <label for="v_yK" v-if="this.regressionValues.get('rk')" ><i>y<sup>k</sup></i></label>
-      <p id="v_yK" v-if="this.regressionValues.get('rk')">{{ regressionValues.get('yk') }}</p>
+      <label for="v_yK" v-if="this.regressionValues.get('yk')" ><i>y<sup>k</sup></i></label>
+      <p id="v_yK" v-if="this.regressionValues.get('yk')">{{ regressionValues.get('yk') }}</p>
     </div>
   
   </div>

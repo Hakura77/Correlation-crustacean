@@ -14,7 +14,7 @@ class RegressionCalculator extends CorrelationCalculator {
     */
     
     if(!quick) {
-      super.validateData()
+      super.validateData(newX, newY)
     }
     if (newX.length < 3 || newY.length < 3) {
       throw new RangeError('Array lengths are too short to show statistically significant result')
@@ -53,7 +53,7 @@ class RegressionCalculator extends CorrelationCalculator {
     let beta_0 = this.avg(this.numberArrayY) - (this.calculateB1(true) * this.avg(this.numberArrayX))
     
     if(!raw) {
-      beta_0 = parseFloat(beta_0.toFixed(2))
+      beta_0 = parseFloat(beta_0.toFixed(2)) // fix to a readable length
     }
     
     return beta_0

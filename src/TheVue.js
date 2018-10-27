@@ -1,6 +1,6 @@
 
 function vueLoad() {
-  var theVue = new Vue ({
+  theVue = new Vue ({
     el: '#vueBox',
     
     data: {
@@ -21,7 +21,7 @@ function vueLoad() {
     methods: {
       
       convertDataToArray: function(data) {
-        data = data.split(' ').join() // strip spaces
+        data = data.split(' ').join('') // strip spaces
         if (data.includes('\n')) { // entries were seperated with new lines
           newData = data.split('\n')
         } else if (data.includes(',')) { // entries were seperated with commas
@@ -34,10 +34,10 @@ function vueLoad() {
           return false
         }
         
-        // check the data array contains only numbers
-        for (let item of newData) {
-          item = parseFloat(item)
-          if(item.isNaN()) {
+        // check the data array contains only numbers - Slightly hacky, modifies the array in-place via parseFloat() and then checks to see if the call returned a NaN (and therefore the value passed isn't a number)
+        for (let item in newData) {
+          newData[item] = parseFloat(newData[item])
+          if(isNaN(newData[item])) {
             return false
           }
         }
@@ -46,8 +46,8 @@ function vueLoad() {
       },
       
       checkData: function(regMode = false) {
-        let newX = convertDataToArray(this.xValue)
-        let newY = convertDataToArray(this.yValue)
+        let newX = this.convertDataToArray(this.xValue)
+        let newY = this.convertDataToArray(this.yValue)
         if(newX && newY) {
           if(!regMode) {
             return [newX, newY]
