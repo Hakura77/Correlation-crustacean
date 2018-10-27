@@ -1,21 +1,38 @@
 class RegressionCalculator extends CorrelationCalculator {
-  constructor(newNumberArrayX, newNumberArrayY) {
+  constructor(newX, newY) {
     // expects arrays of identical length
     // confirm that there is sufficent data to produce a statistically significant result
-    let warn
-    if (newNumberArrayX.length < 3 || newNumberArrayY.length < 3) {
-      throw new RangeError('Array lengths are too short to show statistically significant result')
-    } else if (newNumberArrayX.length < 5 || newNumberArrayX.length < 5) {
-      warn = true
-    }
-    
-    super(newNumberArrayX, newNumberArrayY)
-    
-    if(warn) {
-      this.warning = 'Array lengths are sub-optimal but calculation can proceed'
-    }
-    
+    super(newX, newY)
+    this.validateData(newX, newY, true)
   }
+  
+  validateData(newX, newY, quick = true) {
+    /* quick mode exists because of the way extensions work
+    the super constructor must be called before accessing this. or returning from the child constructor.
+    to avoid Running super.validateData() twice, there is now a "quick" mode that only runs the extra validation for RegressionCalculator, as CorrelationCalculator runs its own validate date when initalizing. Unfortunately this has also resulted in having to have a different logic flow between initalizing and re-initalizing in RegressionCalculator, hense the two later methods 
+    Also, when working in super.MethodOnSuper() the this. construct still refers to an instance of the child class, so code in super that calls one of it's own methods, when run via a super call, will run the child method instead
+    */
+    
+    if(!quick) {
+      super.validateData()
+    }
+    if (newX.length < 3 || newY.length < 3) {
+      throw new RangeError('Array lengths are too short to show statistically significant result')
+    } else if (newX.length < 5 || newY.length < 5) {
+      this.warning = 'Array lengths are sub-optimal but calculation can proceed'
+      return false
+    } else {
+      return true
+    }  
+  }
+  
+  reInitalize(newX, newY) {
+    if(!this.validateData(newX, newY, false)) {
+      console.warn(this.warning)
+    }
+    super.initalize(newX, newY)
+  }
+  
   
   calculateB1 (raw = false) {
     // calculates sigma(x*y) - n*xAvg*yAvg / sigma(x^2) - n*avg(x^2)
@@ -42,7 +59,7 @@ class RegressionCalculator extends CorrelationCalculator {
     return beta_0
   }
   
-  calculate (xk = undefined) {
+  calculate (xk) {
     // should contain some level of validation
     // assumes that the number arrays are populated already
     
@@ -52,7 +69,8 @@ class RegressionCalculator extends CorrelationCalculator {
     
     if(xk) {
       let yk = this.calculateB0(true) + (this.calculateB1(true) * xk )
-      theReturn.set(['yk', yk])
+      yk = parseFloat(yk.toFixed(2))
+      theReturn.set('yk', yk)
     }
     
     return theReturn

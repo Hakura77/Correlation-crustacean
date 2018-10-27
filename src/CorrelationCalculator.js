@@ -5,12 +5,22 @@ Does not conform to standardJS */
 class CorrelationCalculator {
   // Class to take two arrays of numbers
   // calculates the correlation coefficent of the two arrays
-  constructor(newNumberArrayX, newNumberArrayY) {
-    if (newNumberArrayX.length === newNumberArrayY.length) {
-      this.numberArrayY = newNumberArrayY
-      this.numberArrayX = newNumberArrayX
+  constructor(newX, newY) {
+    this.initalize(newX, newY)
+  }
+  
+  validateData(newX, newY) {
+    if(newX.length !== newY.length) {
+      throw new RangeError('Provided arrays are not the same length!')
     } else {
-      throw 'Arrays are not the same length!'
+      return true
+    }
+  }
+  
+  initalize(newX, newY) {
+    if (this.validateData(newX, newY)) {
+      this.numberArrayY = newY
+      this.numberArrayX = newX
     }
   }
   
