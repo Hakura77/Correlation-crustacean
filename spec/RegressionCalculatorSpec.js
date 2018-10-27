@@ -108,11 +108,15 @@ describe('Regression Calculator: ', function() {
     })
     
     it('Should return the correct yk value when passed an xk value', function() {
+      let theXK = 389
+      let expectedYK1 = 649.61
+      let expectedYK2 = 532.72
+      
+      expect(regressionCalculator1.calculate(theXK).get('yk')).toBe(expectedYK1)
+      expect(regressionCalculator2.calculate(theXK).get('yk')).toBe(expectedYK2)
       // do not have clear spec for this test from client - FIX LATER!!!
       // expect(regressionCalculator1.calculate(2)).toBe(3)
       // expect(regressionCalculator2.calculate(2)).toBe(3)
-      
-      expect("I don't know what to expect").toBe('A value of some kind')
       
     })
     
