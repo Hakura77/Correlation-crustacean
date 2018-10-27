@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+<!-- libraries -->
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script> <!-- CHANGE TO PRODUCTION VERSION BEFORE SUBMISSION -->
+
+
+<!-- My code -->
+
+<script src="src/CorrelationCalculator.js"></script>
+<script src="src/RegressionCalculator.js"></script>
+<script src="src/TheVue.js"></script>
+
+<!-- CSS and other formatting -->
+
+<!-- other scripts -->
+
+<script> 
+
+document.addEventListener('DOMContentLoaded', function() {
+  vueLoad()
+
+})
+
+</script>
+
+<meta charset="utf-8">
+<title>Regression and Correlation Home Page</title>
+
+</head>
+
+<body>
+<div id='Header'>
+<h1>BCPR280 Assignment 2 - Thomas Baines</h1>
+</div>
+
+<div id="vueBox" class = 'guiBox' >
+
+  <div class='xEntry'>
+    <h3>X values:</h3>
+    <textarea name='vueX' :placeholder="xPlaceholder" cols='10' rows='15' v-model='xValue'></textarea>
+  </div>
+  
+  <div class='yEntry'>
+    <h3>Y values:</h3>
+    <textarea name='vueY' :placeholder="yPlaceholder" cols='10' rows='15' v-model='yValue'></textarea>
+  </div>
+  
+  <div class='xkEntry'>
+  <label for='vueXK'>{{ xkPrompt }}</label>
+  <input type='text' id='vueXK' v-model='xkValue'>
+  </div>
+  
+  <div class='actionButtons'>
+  <input type='button' v-on:click='runCorrelation' value = 'Calculate Correlation'>
+  <input type='button' v-on:click='runRegression' value = 'Calculate Regression'>
+  
+  </div>
+  
+  <div class='response'>
+    <div id='vueCorrelation' v-if="display === 'c'">
+      <label for="vCorrelationR"><i>r</i>:</label>
+      <p id='vCorrelationR'>{{ correlationValues.get('r') }}</p>
+      
+      <label for="vCorrelationR2"><i>r<sup>2</sup></i>:</label>
+      <p id='vCorrelationR2'>{{ correlationValues.get('r2') }}</p>
+      
+    </div>
+    
+    <div id='vueRegression' v-if="display === 'r'">
+      <label for="vBeta_0">Beta 0:</label>
+      <p id='vBeta_0'>{{ regressionValues.get('beta_0') }}</p>
+      
+      <label for="vBeta_1">Beta 1:</label>
+      <p id='vBeta_1'>{{ regressionValues.get('beta_1') }}</p>
+      
+      <label for="v_yK" v-if="this.regressionValues.get('rk')" ><i>y<sup>k</sup></i></label>
+      <p id="v_yK" v-if="this.regressionValues.get('rk')">{{ regressionValues.get('yk') }}</p>
+    </div>
+  
+  </div>
+</div>
+
+
+
+
+</body>
+
+
+</html>
