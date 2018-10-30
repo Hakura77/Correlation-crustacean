@@ -3,7 +3,14 @@
 <head>
 
 <!-- libraries -->
+
+<!-- vue -->
 <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script> <!-- CHANGE TO PRODUCTION VERSION BEFORE SUBMISSION -->
+
+<!-- react -->
+<script src="https://unpkg.com/react@16/umd/react.development.js"></script>
+<script src="https://unpkg.com/react-dom@16/umd/react-dom.development.js"></script>
+<script src="https://unpkg.com/babel-standalone@6.15.0/babel.min.js"></script>
 
 
 <!-- My code -->
@@ -11,6 +18,8 @@
 <script src="src/CorrelationCalculator.js"></script>
 <script src="src/RegressionCalculator.js"></script>
 <script src="src/TheVue.js"></script>
+
+<script type="text/babel" src='src/theReact.js'></script>
 
 <!-- CSS and other formatting -->
 
@@ -21,6 +30,7 @@
 document.addEventListener('DOMContentLoaded', function() {
   var theVue // force theVue to be global
   vueLoad()
+  reactLoad()
 
 })
 
@@ -37,6 +47,8 @@ document.addEventListener('DOMContentLoaded', function() {
 </div>
 
 <div id="vueBox" class = 'guiBox' >
+
+  <h2>VueJS interface:</h2>
 
   <div class='xEntry'>
     <h3>X values:</h3>
@@ -78,12 +90,15 @@ document.addEventListener('DOMContentLoaded', function() {
       
       <label for="v_yK" v-if="this.regressionValues.get('yk')" ><i>y<sup>k</sup></i></label>
       <p id="v_yK" v-if="this.regressionValues.get('yk')">{{ regressionValues.get('yk') }}</p>
+      
+      <p id='v_yk_warning' v-if='this.theRegressionCalculator.warning'> {{ this.theRegressionCalculator.warning }}</p>
     </div>
   
   </div>
 </div>
 
-
+<div id='reactInterface'>
+</div>
 
 
 </body>

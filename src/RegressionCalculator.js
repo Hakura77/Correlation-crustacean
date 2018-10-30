@@ -20,10 +20,8 @@ class RegressionCalculator extends CorrelationCalculator {
       throw new RangeError('Array lengths are too short to show statistically significant result')
     } else if (newX.length < 5 || newY.length < 5) {
       this.warning = 'Array lengths are sub-optimal but calculation can proceed'
-      return false
-    } else {
-      return true
-    }  
+    }
+    return true  
   }
   
   reInitalize(newX, newY) {
