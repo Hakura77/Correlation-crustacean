@@ -20,7 +20,9 @@ function vueLoad() {
     
     methods: {
       
-      convertDataToArray: function(data) {
+      // following methods were moved to HelperFunctions as they were also needed in the react portion - reducing code duplication
+ 
+    /*   convertDataToArray: function(data) {
         data = data.split(' ').join('') // strip spaces
         if (data.includes('\n')) { // entries were seperated with new lines
           newData = data.split('\n')
@@ -45,7 +47,7 @@ function vueLoad() {
         return newData
       },
       
-      checkData: function(regMode = false) {
+      checkData: function(xValue, yValue, regMode = false) {
         let newX = this.convertDataToArray(this.xValue)
         let newY = this.convertDataToArray(this.yValue)
         if(newX && newY) {
@@ -57,11 +59,11 @@ function vueLoad() {
           }
         }
         
-      },
+      }, */
       
       runCorrelation: function() {
         // convert entered x and y data into arrays.
-        let theData = this.checkData()
+        let theData = HelperFunctions.checkData(this.xValue, this.yValue)
         if(typeof(this.theCorrelationCalculator) !== 'object') {
           this.theCorrelationCalculator = new CorrelationCalculator(...theData)
         } else {
@@ -72,7 +74,7 @@ function vueLoad() {
       },
       
       runRegression: function() {
-        let theData = this.checkData(true)
+        let theData = HelperFunctions.checkData(this.xValue, this.yValue, true, this.xkValue)
         if(typeof(this.theRegressionCalculator) !== 'object') {
           this.theRegressionCalculator = new RegressionCalculator(...theData)
         } else {

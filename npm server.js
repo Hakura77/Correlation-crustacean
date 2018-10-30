@@ -9,6 +9,9 @@ const http = require("http")
 const fs = require('fs')
 const url = require('url')
 const path = require('path')
+const dns = require('dns')
+const os = require('os')
+
 
 // map file extensions
 const mimeType = {
@@ -28,25 +31,33 @@ const mimeType = {
   '.ttf': 'aplication/font-sfnt'
 }
 
+
 const server = http.createServer(function (req, res) {
   
-  // extract path name from req
-  console.log(`url: ${url.parse(req.url)}`)
-  let pathName = url.parse(req.url).pathname
-  console.log(`Pathname: ${pathName}`)
+  console.log(req.headers.host)
+  var address = req.headers.host.split(':')[0] // locates the host address the client used to connect and bases redirections on that instead of alway sending to localhost
   
-  if(!pathName) { // if no path is specified, redirect to index.html
-    res.writeHead(301, {location: `http://localhost:${port}/${indexPage}`})
+  // extract path name from req
+  //console.log(`url: ${url.parse(req.url)}`)
+  let pathName = url.parse(req.url).pathname
+  //console.log(`Pathname: ${pathName}`)
+  
+    // for debugging purposes - log to console which page was reqed
+  console.log(`Request for ${pathName} received`)
+  
+  if(pathName === '/') { // if no path is specified, redirect to index.html
+    // get server's own IP address
+    
+    //console.log('The address is :' + address)
+    res.writeHead(301, {location: `http://${address}:${port}/${indexPage}`})
     res.end()
   }
   
   // determine extension of the pathName
-  console.log(path.parse(pathName))
+  //console.log(path.parse(pathName))
   const ext = path.parse(pathName).ext
   
-  // for debugging purposes - log to console which page was reqed
-  console.log(`Request for ${pathName} received`)
-  
+
   // load file content from file system
   var fileName = pathName.substr(1)
   
