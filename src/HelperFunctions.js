@@ -37,15 +37,21 @@ class HelperFunctions {
     let newY = this.convertDataToArray(yValue)
     
     if(newX && newY) {
-      if(!regMode) {
-        return [newX, newY]
-      } else {
-        let newXK = parseFloat(xkValue)
-        if (!isNaN(newXK)) {
-          return [newX, newY, newXK]
-        } else {
+      if (newX.length === newY.length) {
+        if(!regMode) {
           return [newX, newY]
+        } else {
+          let newXK = parseFloat(xkValue)
+          if (!isNaN(newXK)) {
+            return [newX, newY, newXK]
+          } else {
+            return [newX, newY]
+          }
         }
+      } else {
+        console.warn(`Provided array lengths did not match. X length: ${newX.length}, Y length: ${newY.length} \nConversion process will be aborted.`)
+        
+        return false
       }
     } else {
       return false
