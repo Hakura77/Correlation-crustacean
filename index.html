@@ -50,6 +50,8 @@ document.addEventListener('DOMContentLoaded', function() {
 <div id="vueBox" class = 'guiBox' >
 
   <h2>VueJS interface:</h2>
+  
+  <p v-if="display==='warn'">Invalid data was provided - please try again. (see console for details)</p>
 
   <div class='xEntry'>
     <h3>X values:</h3>
