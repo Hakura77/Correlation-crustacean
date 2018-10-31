@@ -34,7 +34,7 @@ const mimeType = {
 
 const server = http.createServer(function (req, res) {
   
-  console.log(req.headers.host)
+  console.log(`Request for host: ${req.headers.host}`)
   var address = req.headers.host.split(':')[0] // locates the host address the client used to connect and bases redirections on that instead of alway sending to localhost
   
   // extract path name from req

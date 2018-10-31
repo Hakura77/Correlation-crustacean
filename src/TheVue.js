@@ -24,7 +24,7 @@ function vueLoad() {
         // convert entered x and y data into arrays.
         let theData = HelperFunctions.checkData(this.xValue, this.yValue)
         if(theData) {
-          if(typeof(this.theCorrelationCalculator) !== 'object') {
+          if(!(this.theCorrelationCalculator instanceof CorrelationCalculator)) {
             this.theCorrelationCalculator = new CorrelationCalculator(...theData)
           } else {
             this.theCorrelationCalculator.initalize(...theData)
@@ -39,7 +39,7 @@ function vueLoad() {
       runRegression: function() {
         let theData = HelperFunctions.checkData(this.xValue, this.yValue, true, this.xkValue)
         if (theData) {
-          if(typeof(this.theRegressionCalculator) !== 'object') {
+          if(!(this.theRegressionCalculator instanceof RegressionCalculator)) {
             this.theRegressionCalculator = new RegressionCalculator(...theData)
           } else {
             this.theRegressionCalculator.reInitalize(...theData)

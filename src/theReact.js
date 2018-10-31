@@ -8,14 +8,25 @@ class EntryArea extends React.Component {
   constructor(props) {
     super(props)
     this.state = {value: ''}
+    this.handleChange = this.handleChange.bind(this)
+    this.getValue = this.getValue.bind(this)
   }
  
+ handleChange(e) {
+   this.setState({
+     value: event.target.value
+     })
+ }
+ 
+ getValue() {
+  return this.state.value
+ }
   
   render () {
     return (
       <div className={this.props.entrytype + 'Entry'}>
         <h3>{`${this.props.entrytype} values:`}</h3>
-        <textarea name={`react${this.props.entrytype}`} placeholder={`Enter your ${this.props.entrytype} values here, one per line or comma seperated`} cols='10' rows='15' ></textarea>
+        <textarea name={`react${this.props.entrytype}`} placeholder={`Enter your ${this.props.entrytype} values here, one per line or comma seperated`} cols='10' rows='15' value={this.state.value} onChange={this.handleChange} ></textarea>
       </div>
     )
   }
@@ -32,8 +43,10 @@ class ActionButtons extends React.Component {
     if(e.target.name === 'correlation') {
       // run correlation analysis
       console.log('Running correlation')
+      this.props.callback('c')
     } else if (e.target.name === 'regression') {
       console.log('Running Regression')
+      this.props.callback('r')
     } else { // shouldn't happen
       console.log('Abberant behaveour in ActionButtons.handleClick()')
     }
@@ -52,32 +65,43 @@ class ActionButtons extends React.Component {
 class EntryBoxes extends React.Component {
   constructor(props) {
     super(props)
-    this.state = {X: '', Y: '', xkValue: ''}
+    this.state = {xkValue: ''}
+    this.getValues = this.getValues.bind(this)
+    this.xkChange = this.xkChange.bind(this)
   }
   
-  onChange(event) {
-    let theTargetName = event.target.name
-    this.setState({theTargetName: event.target.value})
+  xkChange() {
+    this.setState({
+      xkValue: event.target.value
+    })
   }
+  
+  
+  getValues() {
+    let theX = this.entryX.getValue()
+    let theY = this.entryY.getValue()
+    return new Map([['x', theX], ['y', theY], ['xk', this.state.xkValue]])
+  }
+  
   
   render() {
     return (
       <div className='reactEntryBoxes'> 
-        <div className = 'EntryTextAreas' onChange={this.onChange}>
-          <EntryArea entrytype='Y' />
-          <EntryArea entrytype='X' />
+        <div className = 'EntryTextAreas'>
+          <EntryArea entrytype='X' ref={entryX => {this.entryX = entryX}} />
+          <EntryArea entrytype='Y' ref={entryY => {this.entryY = entryY}}/>
         </div>
         <div className = 'xkEntry'>
           <label htmlFor='reactXK'> {'Enter your XK value here (optional)'} </label>
-          <input type='text' id='reactXK' /> 
+          <input type='text' id='reactXK' value={this.state.xkValue} onChange={this.xkChange}/> 
         </div>
       </div>
     )
   }
-  
 }
 
-class Regressionwarning extends React.Component {
+
+class RegressionWarning extends React.Component {
   constructor(props) {
     super(props)
   }
@@ -86,32 +110,31 @@ class Regressionwarning extends React.Component {
     if (!this.props.warning) {
       return null
     } else {
-      <p id='r_yk_warning'> {this.props.warning} </p>
+      return <p id='r_warning'> {this.props.warning} </p>
     }
   }
   
 }
 
-
 class ResponseSegement extends React.Component {
   constructor(props) {
     super(props)
-    this.state = {displayMode: null, regressionValues: new Map(), correlationValues: new Map()}
+    this.state = {displayMode: null, regressionValues: new Map(), correlationValues: new Map(), rWarning: undefined}
+    this.stateUpdate = this.stateUpdate.bind(this)
   }
   
-  stateUpdate(mode, values) {
+  stateUpdate(mode, values, warning) {
     switch(mode) {
       case 'c':
         this.setState({displayMode: mode, correlationValues: values})
       case 'r':
-        this.state.displayMode = mode
-        this.regressionValues = values
+        this.setState({displayMode: mode, regressionValues: values, rWarning: warning})
         break
       case null:
-        this.state.displayMode = null
+        this.setState({displayMode: mode})
         break
       default:
-        console.warn('warning, abberant behaveour detected in ResponseSegement.stateUpdate()')
+        console.warn('Warning, abberant behaveour detected in ResponseSegement.stateUpdate()')
     }
   }
   
@@ -123,10 +146,10 @@ class ResponseSegement extends React.Component {
       case "c": 
         return(
           <div id='reactCorrelation'>
-            <label for="rCorrelationR"><i>r</i>:</label>
+            <label htmlFor="rCorrelationR"><i>r</i>:</label>
             <p id='rCorrelationR'>{this.state.correlationValues.get('r')}</p>
         
-            <label for="rCorrelationR2"><i>r<sup>2</sup></i>:</label>
+            <label htmlFor="rCorrelationR2"><i>r<sup>2</sup></i>:</label>
             <p id='rCorrelationR2'>{this.state.correlationValues.get('rSquared')}</p>
           </div>
         )
@@ -138,7 +161,7 @@ class ResponseSegement extends React.Component {
             <p id='rBeta_0'> {this.state.regressionValues.get('beta_0')} </p>
             <label htmlFor='rBeta_1'>Beta 1</label>
             <p id='rBeta_1'> {this.state.regressionValues.get('beta_1')} </p>
-            <Regressionwarning warning={this.state.regressionValues.warning} />
+            <RegressionWarning warning={this.state.rWarning} />
           </div>
         )
         break
@@ -152,25 +175,81 @@ class ResponseSegement extends React.Component {
   
 }
 
+class ErrorMessage extends React.Component {
+  constructor (props) {
+    super(props)
+    this.state = {shown: false}
+    this.setShown = this.setShown.bind(this)
+  }
+  
+  setShown(newState) {
+    this.setState({shown: newState})
+  }
+  
+  render() {
+    if (this.state.shown) {
+      return (
+      <p>Invalid data was provided - please try again. (see console for details)</p>
+      )
+    } else {
+      return null
+    }
+  }
+  
+}
+
 class ReactUI extends React.Component {
   constructor(props) {
     super(props)
     this.correlCalc = undefined
     this.regressCalc = undefined
     this.state = {displayMode: null, regressionValues: undefined, correlationValues: undefined}
+    this.renderCall = this.renderCall.bind(this)
   }
   
   renderCall(mode) {
     // get entryBoxes two arrays - validation required.
-    let theValues = this.theEntries.getValues()
-    if (mode === 'r') {
-      // call regressCalc with new arrays, and xk if provided
-      // set state of responseSegment to {displayMode: 'r', regressionValues: {as calculated from regressionCalc} }
-    } else if (mode === 'c') {
-      // call correlCalc with new arrays
-      // set state of responseSegment to {displayMode: 'c', correlationValues: {as calculated from correlation calc} }
+    let theValues = this.theEntries.getValues() // get the values from the input boxes
+    this.theErrorMessage.setShown(false) // hide the error message - might be displayed again later
+    if (mode === 'c') {
+      let validatedData = HelperFunctions.checkData(theValues.get('x'), theValues.get('y'))
+      
+      if(validatedData) {
+        if(!(this.correlCalc instanceof CorrelationCalculator)) {
+          // define new correlation calculator
+          this.correlCalc = new CorrelationCalculator(...validatedData)
+        } else {
+          // reinitalize
+          this.correlCalc.initalize(...validatedData)
+        }
+        let calculated = this.correlCalc.calculate()
+        this.theResponder.stateUpdate(mode, calculated)
+      } else {
+        // something went wrong with the validation - one of the arrays was wrong. Show an error?
+        this.theErrorMessage.setShown(true)
+      }
+      
+    } else if (mode === 'r') {
+      let validatedData = HelperFunctions.checkData(theValues.get('x'), theValues.get('y'), true, theValues.get('xk')) // validate and reformat data 
+      // console.log(validatedData)
+      
+      if(validatedData) {
+        if(!( this.regressCalc instanceof RegressionCalculator)) {
+          // create new regression calculator
+          this.regressCalc = new RegressionCalculator(...validatedData)
+        } else { // a regression calculator already exists
+          this.regressCalc.reInitalize(...validatedData) // reinitalize
+        }
+        let calculated = this.regressCalc.calculate(validatedData[2])
+        this.theResponder.stateUpdate(mode, calculated, this.regressCalc.warning)
+      } else {
+        this.theErrorMessage.setShown(true)
+        // data validation failed - show error of some kind to user
+      }
+      
+
     } else {
-      console.warn('Abberant behaveour detected in reactUI.renderCall()') // error
+      console.warn('Abberant behaveour detected in reactUI.renderCall()') // - tried to call with an unsupported mode
     }
   }
   
@@ -178,9 +257,10 @@ class ReactUI extends React.Component {
     return (
         <div id='This Div exists because babel 6 is stupid - fix later'>
           <h2>{reactSectionHeader}</h2>
-          <EntryBoxes ref={theEntries => this.theEntries = theEntries} />
-          <ActionButtons callback={this.rendercall}/>
-          <ResponseSegement ref={theResponder => this.theResponder = theResponder} />
+          <ErrorMessage ref={(theErrorMessage) => this.theErrorMessage = theErrorMessage} />
+          <EntryBoxes ref={(theEntries) => this.theEntries = theEntries} />
+          <ActionButtons callback={this.renderCall}/>
+          <ResponseSegement ref={(theResponder) => this.theResponder = theResponder} />
         </div>
       )
   }
