@@ -111,10 +111,8 @@ class CorrelationCalculator {
       r = parseFloat(r.toFixed(4))
       rSquared = parseFloat(rSquared.toFixed(4))
     }
-    let returnMap = new Map()
-    returnMap.set('r', r)
-    returnMap.set('rSquared', rSquared)
     
+    let returnMap = new Map([['r', r], ['rSquared', rSquared]])
     return returnMap
   }  
   

@@ -7,17 +7,15 @@ const reactSectionHeader = 'ReactJS User Interface:'
 class EntryArea extends React.Component {
   constructor(props) {
     super(props)
+    this.state = {value: ''}
   }
+ 
   
   render () {
-    /* let theName = `react${this.props.entrytype}`
-    let thePlaceholder = `Enter your ${this.props.entrytype} values here, one per line or comma seperated`
-    let theTitle = `${this.props.entrytype} values:` */
-    
     return (
       <div className={this.props.entrytype + 'Entry'}>
         <h3>{`${this.props.entrytype} values:`}</h3>
-        <textarea name= {`react${this.props.entrytype}`} placeholder = {`Enter your ${this.props.entrytype} values here, one per line or comma seperated`} cols='10' rows='15' ></textarea>
+        <textarea name={`react${this.props.entrytype}`} placeholder={`Enter your ${this.props.entrytype} values here, one per line or comma seperated`} cols='10' rows='15' ></textarea>
       </div>
     )
   }
@@ -54,13 +52,18 @@ class ActionButtons extends React.Component {
 class EntryBoxes extends React.Component {
   constructor(props) {
     super(props)
-    
+    this.state = {X: '', Y: '', xkValue: ''}
+  }
+  
+  onChange(event) {
+    let theTargetName = event.target.name
+    this.setState({theTargetName: event.target.value})
   }
   
   render() {
     return (
       <div className='reactEntryBoxes'> 
-        <div className = 'EntryTextAreas'>
+        <div className = 'EntryTextAreas' onChange={this.onChange}>
           <EntryArea entrytype='Y' />
           <EntryArea entrytype='X' />
         </div>
@@ -99,7 +102,7 @@ class ResponseSegement extends React.Component {
   stateUpdate(mode, values) {
     switch(mode) {
       case 'c':
-        this.setState(displayMode: mode, correlationValues: values)
+        this.setState({displayMode: mode, correlationValues: values})
       case 'r':
         this.state.displayMode = mode
         this.regressionValues = values
@@ -159,7 +162,7 @@ class ReactUI extends React.Component {
   
   renderCall(mode) {
     // get entryBoxes two arrays - validation required.
-    let this.theEntries.getValues()
+    let theValues = this.theEntries.getValues()
     if (mode === 'r') {
       // call regressCalc with new arrays, and xk if provided
       // set state of responseSegment to {displayMode: 'r', regressionValues: {as calculated from regressionCalc} }

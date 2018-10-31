@@ -34,7 +34,7 @@ class RegressionCalculator extends CorrelationCalculator {
   
   calculateB1 (raw = false) {
     // calculates sigma(x*y) - n*xAvg*yAvg / sigma(x^2) - n*avg(x^2)
-    let numerator = this.xySum - (this.numberArrayX.length * this.avg(this.numberArrayX) * this.avg(this.numberArrayY)) 
+    let numerator = this.xySum - (this.n * this.avg(this.numberArrayX) * this.avg(this.numberArrayY)) 
     let denominator = this.sumXSquared - (this.numberArrayX.length * Math.pow(this.avg(this.numberArrayX), 2))
     let beta_1 =  numerator / denominator // Accurate b1 value
     
@@ -58,7 +58,6 @@ class RegressionCalculator extends CorrelationCalculator {
   }
   
   calculate (xk) {
-    // should contain some level of validation
     // assumes that the number arrays are populated already
     
     let b0 = this.calculateB0()
