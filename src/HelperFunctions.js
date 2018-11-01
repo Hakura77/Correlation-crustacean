@@ -59,3 +59,5 @@ class HelperFunctions {
     
   }
 }
+
+module.exports = HelperFunctions

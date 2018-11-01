@@ -75,3 +75,5 @@ class RegressionCalculator extends CorrelationCalculator {
   }
   
 }
+
+module.exports = RegressionCalculator

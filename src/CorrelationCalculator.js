@@ -117,3 +117,5 @@ class CorrelationCalculator {
   }  
   
 }
+
+module.exports = CorrelationCalculator
