@@ -71,10 +71,11 @@ const server = http.createServer(function (req, res) {
 
       // display 404 to web user
       res.writeHead(404, {
-        'Content-Type': 'text/html'
+        'Content-Type': 'text/html',
+        'title': '404 Not Found'
       })
       // 404 text
-      res.end(`File ${pathName} not found`)
+      res.end(`Error 404: File ${pathName} not found`)
     } else { // finding file did not error - file exists and is accessable
       res.writeHead(200, {
         'Content-Type': mimeType[ext]
