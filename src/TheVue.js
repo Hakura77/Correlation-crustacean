@@ -1,8 +1,8 @@
 
-function vueLoad() {
-  theVue = new Vue ({
+function vueLoad () {
+  theVue = new Vue({
     el: '#vueBox',
-    
+
     data: {
       theCorrelationCalculator: undefined,
       theRegressionCalculator: undefined,
@@ -15,16 +15,16 @@ function vueLoad() {
       display: false,
       correlationValues: undefined,
       regressionValues: undefined
-      
+
     },
-    
+
     methods: {
-      
-      runCorrelation: function() {
+
+      runCorrelation: function () {
         // convert entered x and y data into arrays.
         let theData = HelperFunctions.checkData(this.xValue, this.yValue)
-        if(theData) {
-          if(!(this.theCorrelationCalculator instanceof CorrelationCalculator)) {
+        if (theData) {
+          if (!(this.theCorrelationCalculator instanceof CorrelationCalculator)) {
             this.theCorrelationCalculator = new CorrelationCalculator(...theData)
           } else {
             this.theCorrelationCalculator.initalize(...theData)
@@ -35,11 +35,11 @@ function vueLoad() {
           this.display = 'warn'
         }
       },
-      
-      runRegression: function() {
+
+      runRegression: function () {
         let theData = HelperFunctions.checkData(this.xValue, this.yValue, true, this.xkValue)
         if (theData) {
-          if(!(this.theRegressionCalculator instanceof RegressionCalculator)) {
+          if (!(this.theRegressionCalculator instanceof RegressionCalculator)) {
             this.theRegressionCalculator = new RegressionCalculator(...theData)
           } else {
             this.theRegressionCalculator.reInitalize(...theData)
@@ -50,8 +50,8 @@ function vueLoad() {
           this.display = 'warn'
         }
       }
-      
+
     }
-    
+
   })
 }

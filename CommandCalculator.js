@@ -3,9 +3,8 @@ const CorrelationCalculator = require('./src/CorrelationCalculator_node.js')
 const RegressionCalculator = require('./src/RegressionCalculator_node.js')
 const HelperFunctions = require('./src/HelperFunctions.js')
 
-
-function validatePath(path) {
-  if(fs.existsSync(path)){
+function validatePath (path) {
+  if (fs.existsSync(path)) {
     return true
   } else {
     Console.log(`File at path ${path} does not exist`)
@@ -13,9 +12,9 @@ function validatePath(path) {
   }
 }
 
-function getFileToArray(path) {
+function getFileToArray (path) {
   rawData = fs.readFileSync(path, 'utf8', (err, data) => {
-    if(err) {
+    if (err) {
       console.log(`File reading failed: ${err.message}`)
       process.exit(1)
     } else {
@@ -23,7 +22,7 @@ function getFileToArray(path) {
     }
   })
   convertedValue = HelperFunctions.convertDataToArray(rawData)
-  if(convertedValue) {
+  if (convertedValue) {
     console.log(`Import of ${path} successful`)
     return convertedValue
   } else {
@@ -31,8 +30,8 @@ function getFileToArray(path) {
   }
 }
 
-function getXK(paths) {
-  if(validatePath(paths.x) && validatePath(paths.y)) {
+function getXK (paths) {
+  if (validatePath(paths.x) && validatePath(paths.y)) {
     arrays = {}
     arrays.x = getFileToArray(paths.x)
     arrays.y = getFileToArray(paths.y)
@@ -43,10 +42,9 @@ function getXK(paths) {
   }
 }
 
-function writeOut(data, path) {
-  
+function writeOut (data, path) {
   console.log(`Writing to ${path}`)
-  
+
   let writeStr = ''
   for (let aKey of data.keys()) {
     console.log(`Pushing to output buffer: ${aKey}: ${data.get(aKey)}`)
@@ -54,28 +52,28 @@ function writeOut(data, path) {
   }
   writeStr = writeStr.slice(0, -4) // strip last newline
   fs.writeFileSync(path, writeStr, 'utf8', (err) => {
-      if(err) {
-        console.log('Unable to write to file - data not saved \n Permission denied or folder does not exist')
-        process.exit(1)
-      }
-    })
+    if (err) {
+      console.log('Unable to write to file - data not saved \n Permission denied or folder does not exist')
+      process.exit(1)
+    }
+  })
   console.log('Data written to file')
   process.exit(0)
 }
 
-function badCommand() {
+function badCommand () {
   console.log('Incorrect usage of command.')
   console.log('Correct format is: \n node commandCalculate.js <Data file X> <Data file Y> <Data Out File> <mode> <xk>')
   process.exit(1)
 }
 
-function main() {
+function main () {
   if (process.argv.length === 6 || process.argv.length === 7) {
     // correct number of arguments
-    if(['c', 'r'].includes(process.argv[5])) {
+    if (['c', 'r'].includes(process.argv[5])) {
       let theCalculator
       let theReturn
-      let paths = {'x': process.argv[2], y: process.argv[3]}
+      let paths = { 'x': process.argv[2], y: process.argv[3] }
       let arrays = getXK(paths)
       if (process.argv[5] === 'c') {
         console.log('launching in correlation mode')
@@ -85,8 +83,8 @@ function main() {
         try {
           theCalculator = new CorrelationCalculator(arrays.x, arrays.y)
           theReturn = theCalculator.calculate()
-        } catch(err) {
-          if(err instanceof RangeError) {
+        } catch (err) {
+          if (err instanceof RangeError) {
             console.log(`Analysis failed because ${err.message}`)
             process.exit(1)
           } else {
@@ -98,8 +96,8 @@ function main() {
         try {
           theCalculator = new RegressionCalculator(arrays.x, arrays.y)
           theReturn = theCalculator.calculate(process.argv[6])
-        } catch(err) {
-          if(err instanceof RangeError) {
+        } catch (err) {
+          if (err instanceof RangeError) {
             console.log(`Analysis failed because ${err.message}`)
             process.exit(1)
           } else {
@@ -116,5 +114,4 @@ function main() {
   }
 }
 
-main();
-
+main()
