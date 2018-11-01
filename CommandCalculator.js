@@ -1,128 +1,120 @@
-// nodeJS command line calculator program for BCPR280 - 2018S2 - Thomas Baines
-
 const fs = require('fs')
-const readline = require('readline')
-
-const CorrelationCalculator = require('./src/CorrelationCalculator.js')
-const RegressionCalculator = require('./src/RegressionCalculator.js')
+const CorrelationCalculator = require('./src/CorrelationCalculator_node.js')
+const RegressionCalculator = require('./src/RegressionCalculator_node.js')
 const HelperFunctions = require('./src/HelperFunctions.js')
 
 
-// interactive mode
-const rl = readline.createInterface({
-  input: process.stdin,
-  output: process.stdout
-})
-
-var inputLoop = true
-var mode;
-
-
-console.log("Welcome to Thomas Baines's Calculator command line interface.")
-
-let calculators = {correl: undefined, regress: undefined}
-
-function getFileToArray(arrayID) {
-  let get
-  let path
-  let rawData
-  let convertedValue
-  while(!get) {
-    path = r1.question(`Please enter path for the ${arrayID} values file:`, (answer) => {
-      return answer
-    })
-    rawData = fs.readFile(xPath, (err, data) => {
-      if(err) {
-        console.log(`Unable to access file at path \n ${err.path}`)
-        console.log('Please try again')
-        return false
-      } else {
-        return data
-      }
-    })
-    if(rawData) {
-      convertedValue = HelperFunctions.convertDataToArray(rawData)
-      if(convertedValue) {
-        console.log(`Import of ${arrayID} array successful`)
-        get = true
-      }
-    }
+function validatePath(path) {
+  if(fs.existsSync(path)){
+    return true
+  } else {
+    Console.log(`File at path ${path} does not exist`)
+    return false
   }
-  return convertedValue
 }
 
-function getXK () {
-  let exit
-  let answer
-  while(!exit) {
-    r1.question('Enter an XK value or leave blank to skip:', (a) => {
-      answer = a
-    }
-    if(answer === '') {
-      return false
-    } else if (!isNaN(parseFloat(answer))) {
-      return answer
+function getFileToArray(path) {
+  rawData = fs.readFileSync(path, 'utf8', (err, data) => {
+    if(err) {
+      console.log(`File reading failed: ${err.message}`)
+      process.exit(1)
     } else {
-      console.log('Please enter a valid XK value or leave blank to skip')
+      return data
     }
-  }
-}
-
-function getXandY() {
-  let xArray = getFileToArray('X')
-  let yArray = getFileToArray('Y')
-  return {x: xArray, y: yArray}
-}
-
-while (inputLoop) {
-  r1.question('Please Choose a calculator mode: (c for Correlation, R for Regression, X to exit)', (answer) => {
-    mode = answer
   })
-  switch(mode.charAt(0).toLowerCase()) {
-    case 'c':
-      console.log('Beginning Correlation Analysis')
-      let theArrays = getXandY()
-      break
-    
-    case 'r':
-      console.log('Beginning Regression Analysis')
-      let theArrays = getXandY()
-      r1.question('Please enter an ')
-      break
-      
-    case 'x':
-      r1.question('Are you sure you want to exit? Y/N', (answer) => {
-        if(answer.charAt(0).toLowerCase() === 'y') {
-          inputLoop = false
-        }
-      })
-      break
-    default:
-      console.log('Unrecognized input, please try again')
-      break
+  convertedValue = HelperFunctions.convertDataToArray(rawData)
+  if(convertedValue) {
+    console.log(`Import of ${path} successful`)
+    return convertedValue
+  } else {
+    process.exit(1)
   }
-  
-  
 }
 
+function getXK(paths) {
+  if(validatePath(paths.x) && validatePath(paths.y)) {
+    arrays = {}
+    arrays.x = getFileToArray(paths.x)
+    arrays.y = getFileToArray(paths.y)
+    return arrays
+  } else {
+    console.log('Process failed')
+    process.exit(1)
+  }
+}
 
-// select calculator mode
-// if correl
-//    ask for x values path
-//    ask for y values path
-//    import data
-//    validate data
-//    run correlation
-//    return r and r2 to console
-//    ask for path to save to file
-//    save to file
-// else if regress
-//    ask for x values path
-//    ask for y values path
-//    ask for xk value (optional)
-//    import data
-//    validate data
-//    run regression
-//    return beta_0, beta_1, and optionally yk
-//    ask for path to save to file
-//    save to file
+function writeOut(data, path) {
+  
+  console.log(`Writing to ${path}`)
+  
+  let writeStr = ''
+  for (let aKey of data.keys()) {
+    console.log(`Pushing to output buffer: ${aKey}: ${data.get(aKey)}`)
+    writeStr += `${aKey}: ${data.get(aKey)}\r\n`
+  }
+  writeStr = writeStr.slice(0, -4) // strip last newline
+  fs.writeFileSync(path, writeStr, 'utf8', (err) => {
+      if(err) {
+        console.log('Unable to write to file - data not saved \n Permission denied or folder does not exist')
+        process.exit(1)
+      }
+    })
+  console.log('Data written to file')
+  process.exit(0)
+}
+
+function badCommand() {
+  console.log('Incorrect usage of command.')
+  console.log('Correct format is: \n node commandCalculate.js <Data file X> <Data file Y> <Data Out File> <mode> <xk>')
+  process.exit(1)
+}
+
+function main() {
+  if (process.argv.length === 6 || process.argv.length === 7) {
+    // correct number of arguments
+    if(['c', 'r'].includes(process.argv[5])) {
+      let theCalculator
+      let theReturn
+      let paths = {'x': process.argv[2], y: process.argv[3]}
+      let arrays = getXK(paths)
+      if (process.argv[5] === 'c') {
+        console.log('launching in correlation mode')
+        if (process.argv[6]) {
+          console.log('You specified an xk value in correlation mode - ignoring')
+        }
+        try {
+          theCalculator = new CorrelationCalculator(arrays.x, arrays.y)
+          theReturn = theCalculator.calculate()
+        } catch(err) {
+          if(err instanceof RangeError) {
+            console.log(`Analysis failed because ${err.message}`)
+            process.exit(1)
+          } else {
+            throw err
+          }
+        }
+      } else {
+        console.log('Launching in regression mode')
+        try {
+          theCalculator = new RegressionCalculator(arrays.x, arrays.y)
+          theReturn = theCalculator.calculate(process.argv[6])
+        } catch(err) {
+          if(err instanceof RangeError) {
+            console.log(`Analysis failed because ${err.message}`)
+            process.exit(1)
+          } else {
+            throw err
+          }
+        }
+      }
+      writeOut(theReturn, process.argv[4])
+    } else {
+      badCommand()
+    }
+  } else {
+    badCommand()
+  }
+}
+
+main();
+

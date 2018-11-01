@@ -1,6 +1,6 @@
+const CorrelationCalculator = require('./CorrelationCalculator_node.js')
 
-
-class RegressionCalculator extends CorrelationCalculator {
+module.exports = class RegressionCalculator extends CorrelationCalculator {
   constructor(newX, newY) {
     // expects arrays of identical length
     // confirm that there is sufficent data to produce a statistically significant result

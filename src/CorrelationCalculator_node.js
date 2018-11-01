@@ -2,7 +2,7 @@
 All rights reserved
 Does not conform to standardJS */
 
-class CorrelationCalculator {
+module.exports = class CorrelationCalculator {
   // Class to take two arrays of numbers
   // calculates the correlation coefficent of the two arrays
   constructor(newX, newY) {
@@ -117,3 +117,4 @@ class CorrelationCalculator {
   }  
   
 }
+
