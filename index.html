@@ -7,6 +7,12 @@
 <!-- vue -->
 <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script> <!-- CHANGE TO PRODUCTION VERSION BEFORE SUBMISSION -->
 
+<!-- bootstrap -->
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
+
 <!-- react -->
 <script src="https://unpkg.com/react@16/umd/react.development.js"></script>
 <script src="https://unpkg.com/react-dom@16/umd/react-dom.development.js"></script>
@@ -31,7 +37,6 @@
 document.addEventListener('DOMContentLoaded', function() {
   var theVue // force theVue to be global
   vueLoad()
-
 })
 
 </script>
@@ -46,20 +51,24 @@ document.addEventListener('DOMContentLoaded', function() {
 <h1>BCPR280 Assignment 2 - Thomas Baines</h1>
 </div>
 
-<div id="vueBox" class = 'guiBox' >
+<div id="vueBox" class = 'card' >
 
-  <h2>VueJS interface:</h2>
+  <h2 class='card-header'>VueJS interface:</h2>
   
   <p v-if="display==='warn'">Invalid data was provided - please try again. (see console for details)</p>
 
-  <div class='xEntry'>
+  <div name="bootstrapStructure" class="row">
+  
+  <div class='xEntry col-md-6'>
     <h3>X values:</h3>
     <textarea name='vueX' :placeholder="xPlaceholder" cols='10' rows='15' v-model='xValue'></textarea>
   </div>
   
-  <div class='yEntry'>
+  <div class='yEntry col-md-6'>
     <h3>Y values:</h3>
     <textarea name='vueY' :placeholder="yPlaceholder" cols='10' rows='15' v-model='yValue'></textarea>
+  </div>
+  
   </div>
   
   <div class='xkEntry'>
@@ -67,9 +76,9 @@ document.addEventListener('DOMContentLoaded', function() {
   <input type='text' id='vueXK' v-model='xkValue'>
   </div>
   
-  <div class='actionButtons'>
-  <input type='button' v-on:click='runCorrelation' value = 'Calculate Correlation'>
-  <input type='button' v-on:click='runRegression' value = 'Calculate Regression'>
+  <div class='actionButtons btn-group'>
+  <input type='button' class='btn btn-primary' v-on:click='runCorrelation' value = 'Calculate Correlation'>
+  <input type='button' class='btn btn-primary' v-on:click='runRegression' value = 'Calculate Regression'>
   
   </div>
   
@@ -98,8 +107,16 @@ document.addEventListener('DOMContentLoaded', function() {
   
   </div>
 </div>
+<br>
+<div id='reactInterface' class='card'>
+</div>
+<br>
 
-<div id='reactInterface'>
+
+
+<div id='Other useful things' class='card'>
+  <h2 class='card-header'>Other Useful Links</h2>
+    <input type='button' class='btn btn-secondary' onClick="window.location.pathname='/SpecRunner.html'" value="JasmineJS Spec" />
 </div>
 
 </body>

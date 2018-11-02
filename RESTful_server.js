@@ -46,14 +46,22 @@ var server = http.createServer((req, res) => {
     }
   }
   let theReturn = '{'
-  theResult.forEach((val, key) => {
-    theReturn += `"${key}": "${val}",`
-  })
-  theReturn = theReturn.slice(0, -1)
-  theReturn += '}'
-  theJSON = JSON.parse(theReturn) // ta-da
+  try{
+	  theResult.forEach((val, key) => {
+		theReturn += `"${key}": "${val}",`
+	  })
+	  theReturn = theReturn.slice(0, -1)
+	  theReturn += '}'
+	  theJSON = JSON.parse(theReturn) // ta-da
 
-  // and now we make it text again
-  res.writeHead(200, { 'content-type': 'applicaiton/json' })
-  res.end(JSON.stringify(theJSON))
+	  // and now we make it text again
+	  res.writeHead(200, { 'content-type': 'applicaiton/json' })
+	  res.end(JSON.stringify(theJSON))
+  } catch(err) {
+	  if(err instanceof TypeError) { 
+		console.log('Bad data cleanup completed')
+	  } else { 
+		throw err
+	  }
+  }
 }).listen(5000)

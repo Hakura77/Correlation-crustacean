@@ -24,7 +24,7 @@ class EntryArea extends React.Component {
 
   render () {
     return (
-      <div className={this.props.entrytype + 'Entry'}>
+      <div className={this.props.entrytype + 'Entry col-md-6'}>
         <h3>{`${this.props.entrytype} values:`}</h3>
         <textarea name={`react${this.props.entrytype}`} placeholder={`Enter your ${this.props.entrytype} values here, one per line or comma seperated`} cols='10' rows='15' value={this.state.value} onChange={this.handleChange} />
       </div>
@@ -53,9 +53,9 @@ class ActionButtons extends React.Component {
 
   render () {
     return (
-      <div className='actionButtons'>
-        <input type='button' onClick={this.handleClick} name='correlation' value='Calculate Correlation' />
-        <input type='button' onClick={this.handleClick} name='regression' value='Calculate Regression' />
+      <div className='actionButtons btn-group'>
+        <input type='button' className='btn btn-primary' onClick={this.handleClick} name='correlation' value='Calculate Correlation' />
+        <input type='button' className='btn btn-primary' onClick={this.handleClick} name='regression' value='Calculate Regression' />
       </div>
     )
   }
@@ -84,7 +84,7 @@ class EntryBoxes extends React.Component {
   render () {
     return (
       <div className='reactEntryBoxes'>
-        <div className='EntryTextAreas'>
+        <div className='EntryTextAreas row'>
           <EntryArea entrytype='X' ref={entryX => { this.entryX = entryX }} />
           <EntryArea entrytype='Y' ref={entryY => { this.entryY = entryY }} />
         </div>
@@ -244,7 +244,7 @@ class ReactUI extends React.Component {
   render () {
     return (
       <div id='This Div exists because babel 6 is stupid - fix later'>
-        <h2>{reactSectionHeader}</h2>
+        <h2 className='card-header'>{reactSectionHeader}</h2>
         <ErrorMessage ref={(theErrorMessage) => this.theErrorMessage = theErrorMessage} />
         <EntryBoxes ref={(theEntries) => this.theEntries = theEntries} />
         <ActionButtons callback={this.renderCall} />
